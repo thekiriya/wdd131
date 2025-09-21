@@ -7,20 +7,24 @@ body {
     text-align: center;
 }
 
-header h1, header h2 {
+.content {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header.title h1,
+header.title h2 {
     margin: 20px 0;
     letter-spacing: 2px;
     text-transform: uppercase;
 }
 
-header h2 {
+header.title h2 {
     color: #006EB6;
 }
 
 main {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
     text-align: left;
 }
 
@@ -35,7 +39,7 @@ footer {
     padding: 10px 0;
 }
 
-footer img.Logo {
+footer img.logo {
     width: 150px;
     height: auto;
 }
