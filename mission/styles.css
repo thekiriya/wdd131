@@ -1,0 +1,41 @@
+body {
+    font-family: "Times New Roman", serif;
+    font-size: 20px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+header h1, header h2 {
+    margin: 20px 0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+header h2 {
+    color: #006EB6;
+}
+
+main {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: left;
+}
+
+main ol.does-list {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+footer {
+    margin-top: 40px;
+    text-align: center;
+    padding: 10px 0;
+}
+
+footer img.Logo {
+    width: 150px;
+    height: auto;
+}
