@@ -24,6 +24,12 @@ header.title h2 {
     color: #006EB6;
 }
 
+header.title h2 {
+    color: #006EB6;
+    font-size: 18px; /* smaller so it doesn’t wrap */
+    white-space: nowrap; /* prevents it from splitting into 2 lines */
+}
+
 main {
     text-align: left;
 }
