@@ -22,13 +22,15 @@ header.title h2 {
 
 header.title h2 {
     color: #006EB6;
+    font-size: 18px;
+    white-space: nowrap;
+    border-bottom: 1px solid black;
+    padding-bottom: 5px;
+    display: inline-block;
+    width: 80%;      
+    text-align: center;
 }
 
-header.title h2 {
-    color: #006EB6;
-    font-size: 18px; /* smaller so it doesn’t wrap */
-    white-space: nowrap; /* prevents it from splitting into 2 lines */
-}
 
 main {
     text-align: left;
