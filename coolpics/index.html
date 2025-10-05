@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cool Pics 📷</title>
+  <meta name="description" content="Responsive photography gallery exercise — Cool Pics." />
+  <meta name="author" content="Kiriya" />
+  <link rel="stylesheet" href="coolpics.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="site-title">Cool Pics <span aria-hidden="true">📷</span></h1>
+
+      <nav class="main-nav" aria-label="Primary">
+        <button id="menuToggle" class="menu-btn" aria-controls="siteNav" aria-expanded="false">
+          Menu
+        </button>
+
+        <ul id="siteNav" class="nav-links" role="menu">
+          <li role="none"><a role="menuitem" href="#">Home</a></li>
+          <li role="none"><a role="menuitem" href="#">People</a></li>
+          <li role="none"><a role="menuitem" href="#">Places</a></li>
+          <li role="none"><a role="menuitem" href="#">About</a></li>
+          <li role="none"><a role="menuitem" href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h2 class="section-title">Current Work</h2>
+
+      <section class="gallery" aria-label="photography gallery">
+        <!-- 9 placeholder figures — swap each src for different images if you want -->
+        <figure><img src="norris-sm.jpeg" alt="landscape 1"></figure>
+        <figure><img src="norris-sm.jpeg" alt="landscape 2"></figure>
+        <figure><img src="norris-sm.jpeg" alt="landscape 3"></figure>
+        <figure><img src="norris-sm.jpeg" alt="landscape 4"></figure>
+        <figure><img src="norris-sm.jpeg" alt="landscape 5"></figure>
+        <figure><img src="norris-sm.jpeg" alt="landscape 6"></figure>
+        <figure><img src="norris-sm.jpeg" alt="landscape 7"></figure>
+        <figure><img src="norris-sm.jpeg" alt="landscape 8"></figure>
+        <figure><img src="norris-sm.jpeg" alt="landscape 9"></figure>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© 2023 Not a real site 😀</small>
+    </div>
+  </footer>
+
+  <script src="coolpics.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+/* Import Mooli for headings (fallback to system sans) */
+@import url('https://fonts.googleapis.com/css2?family=Mooli&display=swap');
+
+:root{
+  --primary-color: #52489c;
+  --secondary-color: #59c3c3;
+  --accent-color: #f45b69;
+  --text-dark: #333333;
+  --text-light: #efefef;
+  --primary-font: Arial, Helvetica, sans-serif;
+  --secondary-font: "Mooli", sans-serif;
+}
+
+/* Reset-ish */
+* { box-sizing: border-box; }
+html,body { height: 100%; margin: 0; }
+
+/* Page layout */
+body {
+  font-family: var(--primary-font);
+  color: var(--text-dark);
+  background: #efefef;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.container {
+  width: min(1100px, 96%);
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+/* Header */
+.site-header{
+  background: var(--primary-color);
+  color: var(--text-light);
+}
+.header-inner {
+  padding: 18px 0;
+  text-align: center;
+}
+.site-title{
+  margin: 0;
+  font-family: var(--secondary-font);
+  font-size: 2.4rem;
+  letter-spacing: 0.02em;
+}
+
+/* Nav */
+.main-nav {
+  margin-top: 8px;
+}
+.menu-btn{
+  background: none;
+  border: none;
+  color: var(--text-light);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  text-decoration: underline;
+}
+.menu-btn:focus{ outline: 3px solid rgba(255,255,255,0.18); }
+
+/* Navigation links (mobile: hidden until menu toggled) */
+.nav-links{
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  display: none;                 /* hidden by default on small screens */
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+.nav-links.open {                 /* added by JS when menu toggled */
+  display: flex;
+}
+.nav-links a{
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+/* Section title */
+.section-title{
+  text-align: center;
+  font-weight: 700;
+  margin: 24px 0;
+}
+
+/* Gallery grid (start single column) */
+.gallery{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  justify-items: center;
+  padding-bottom: 36px;
+}
+
+/* Each figure is a square thumbnail */
+figure{
+  width: 250px;
+  height: 250px;
+  margin: 0;
+  display: block;
+  /* center alignment handled by gallery's justify-items */
+}
+figure img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;     /* crop instead of stretching */
+  display: block;
+  border: 6px solid white;          /* white mat */
+  box-shadow: 0 7px 0 rgba(0,0,0,0.45); /* offset drop "ledge" */
+}
+
+/* Footer */
+.site-footer{
+  background: var(--primary-color);
+  color: var(--text-light);
+  padding: 10px 0;
+  font-size: 0.9rem;
+}
+.site-footer .container{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* -----------------------
+   Responsive breakpoints
+   - >=700px: 2 columns
+   - >=1000px: 3 columns + horizontal nav, hide menu button
+   ----------------------- */
+
+@media (min-width:700px){
+  .gallery{
+    grid-template-columns: repeat(2, 250px);
+  }
+}
+
+@media (min-width:1000px){
+  .gallery{
+    grid-template-columns: repeat(3, 250px);
+  }
+
+  /* show nav horizontally and hide the menu button on wide screens */
+  .menu-btn { display: none; }
+  .nav-links {
+    display: flex !important; /* ensure visible on wide screens */
+    flex-direction: row;
+    gap: 18px;
+    justify-content: center;
+    margin: 8px 0 0;
+  }
+
+  .site-footer .container { justify-content: center; }
+}
