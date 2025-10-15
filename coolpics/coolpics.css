@@ -127,11 +127,7 @@ figure img{
   align-items: center;
 }
 
-/* -----------------------
-   Responsive breakpoints
-   - >=700px: 2 columns
-   - >=1000px: 3 columns + horizontal nav, hide menu button
-   ----------------------- */
+
 
 @media (min-width:700px){
   .gallery{

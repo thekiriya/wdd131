@@ -1,29 +1,27 @@
-// Simple accessible menu toggle for mobile
-document.addEventListener('DOMContentLoaded', function () {
-  const btn = document.getElementById('menuToggle');
-  const nav = document.getElementById('siteNav');
 
-  if (!btn || !nav) return;
+// This makes the menu button show and hide the navigation links.
 
-  btn.addEventListener('click', () => {
-    const isOpen = nav.classList.toggle('open');
-    btn.setAttribute('aria-expanded', String(isOpen));
+const menuButton = document.querySelector("#menuToggle");
+const navLinks = document.querySelector("#siteNav");
+
+
+if (menuButton && navLinks) {
+
+  menuButton.addEventListener("click", function () {
+    // toggle the "open" class on the nav
+    navLinks.classList.toggle("open");
+
+
+    const isOpen = navLinks.classList.contains("open");
+    menuButton.setAttribute("aria-expanded", isOpen);
   });
 
-  // Close nav if a link is clicked (mobile)
-  nav.addEventListener('click', (e) => {
-    if (e.target.tagName.toLowerCase() === 'a') {
-      nav.classList.remove('open');
-      btn.setAttribute('aria-expanded', 'false');
-    }
-  });
 
-  // Optional: close the menu on Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && nav.classList.contains('open')) {
-      nav.classList.remove('open');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.focus();
-    }
+  const links = navLinks.querySelectorAll("a");
+  links.forEach(function (link) {
+    link.addEventListener("click", function () {
+      navLinks.classList.remove("open");
+      menuButton.setAttribute("aria-expanded", false);
+    });
   });
-});
+}
