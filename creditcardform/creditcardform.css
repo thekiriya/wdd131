@@ -1,0 +1,188 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+header {
+    display: none;
+}
+
+main {
+    width: 100%;
+    max-width: 600px;
+    height: 400px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Form Container */
+.payment-form {
+    position: relative; 
+    width: 500px;
+    height: 350px;
+}
+
+/* Shared Card Styles */
+.card {
+    background-color: #e0e0e0; 
+    border-radius: 15px;
+    padding: 25px;
+    width: 400px;
+    height: 250px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    position: absolute; /* Essential for overlap */
+}
+
+/* --- Front Card Styling --- */
+.card-front {
+    top: 0;
+    left: 0;
+    z-index: 2; 
+}
+
+/* The Orange Chip */
+.card-front::after {
+    content: '';
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    width: 50px;
+    height: 35px;
+    background: #ff7f50; 
+    border-radius: 5px;
+   
+    background-image: linear-gradient(135deg, rgba(255,255,255,0.3) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.3) 75%, transparent 75%, transparent);
+    background-size: 10px 10px;
+}
+
+.total {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+
+.card-back {
+    top: 50px;     
+    left: 120px;   
+    z-index: 1;    
+    background-color: #dcdcdc; 
+}
+
+.stripe {
+    background-color: #333;
+    height: 50px;
+    width: 100%;
+  
+    margin-left: -25px; 
+    padding-right: 50px; 
+    width: calc(100% + 50px);
+    margin-bottom: 80px;
+}
+
+/* --- Input Groups & Layout --- */
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+    color: #333;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #999;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: #fff;
+}
+
+
+.card-front .input-group:nth-child(2) {
+    /* Card Number */
+    margin-bottom: 20px;
+}
+
+
+.card-front .input-group:nth-child(3) {
+    /* Card Holder */
+    float: left;
+    width: 60%;
+}
+
+.exp-group {
+    float: right;
+    width: 35%;
+    display: flex;
+    gap: 10px;
+}
+
+.exp-group .input-group {
+    width: 50%;
+}
+
+
+.exp-group {
+    position: relative;
+}
+.exp-group::before {
+    content: 'EXPIRATION';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.exp-group label {
+    display: none; 
+}
+
+
+.card-back .input-group {
+    width: 100px;
+    float: right; 
+    margin-right: 20px;
+    margin-top: 10px;
+}
+
+/* --- Submit Button --- */
+.submit-btn {
+    position: absolute;
+    bottom: -60px; 
+    right: -20px; 
+    padding: 10px 30px;
+    font-family: inherit;
+    font-weight: bold;
+    background-color: #e0e0e0;
+    border: 2px solid #333;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 2px 2px 0px #333;
+    transition: transform 0.1s;
+}
+
+.submit-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}
