@@ -1,0 +1,751 @@
+/* Optimized CSS with Logo Fix */
+:root {
+    --primary-brown: #654325;
+    --nav-blue: #090a67;
+    --shelf-brown: #987052;
+    --light-beige: #f7f3e8;
+    --card-beige: #e8d7b9;
+    --medium-brown: #8d6e63;
+    --dark-brown: #6d4c41;
+    --very-dark-brown: #4e342e;
+    --light-border: #c0ad9f;
+}
+
+/* Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--primary-brown);
+    color: #ffffff;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Skip to content for accessibility */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--nav-blue);
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 0 0 4px 4px;
+    z-index: 1001;
+}
+
+.skip-to-content:focus {
+    top: 0;
+}
+
+/* Navigation Bar - FIXED VERSION */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    height: 60px;
+    background-color: var(--nav-blue);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* New rule to make the logo image fit its parent container */
+.logo-placeholder img {
+    display: block; /* Helps with alignment and removes extra space */
+    width: 100%; /* Take up 100% of the parent's width (100px) */
+    height: 100%; /* Take up 100% of the parent's height (40px) */
+    object-fit: contain; /* Ensures the image is fully visible without stretching */
+    border-radius: 4px; /* Matches the parent's border-radius */
+}
+
+/* Logo - FIXED: Won't grow or shrink */
+.logo-placeholder {
+    width: 100px;
+    height: 40px;
+    background-color: #555;
+    border-radius: 4px;
+    flex: 0 0 100px; /* flex-grow: 0, flex-shrink: 0, flex-basis: 100px */
+    max-width: 100px;
+    min-width: 100px;
+}
+
+/* Navigation container */
+.navbar nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+/* Navigation links */
+.profile-link, .bookshelf-link {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.profile-link:hover, .bookshelf-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    text-decoration: underline;
+}
+
+.profile-link:focus, .bookshelf-link:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+/* Bookshelf Structure */
+.bookshelf-container {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 60px);
+}
+
+.shelf {
+    width: 100%;
+    height: 10px;
+    background-color: var(--shelf-brown);
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+    margin-top: 100px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Add Button */
+.add-button {
+    position: absolute;
+    top: -65px;
+    left: 20px;
+    width: 30px;
+    height: 30px;
+    background-color: #555;
+    color: white;
+    font-size: 20px;
+    line-height: 1;
+    border: none;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-button:hover {
+    background-color: #777;
+    transform: scale(1.1);
+}
+
+.add-button:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 30px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.close-button, .close-details-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-button:hover,
+.close-button:focus,
+.close-details-button:hover,
+.close-details-button:focus {
+    color: #000;
+    text-decoration: none;
+    outline: 2px solid #000;
+    border-radius: 50%;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+    font-size: 1rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    border-color: var(--nav-blue);
+    outline: none;
+}
+
+/* Cover Preview */
+.cover-preview {
+    width: 100px;
+    height: 150px;
+    margin-top: 10px;
+    background-color: #eee;
+    border: 2px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+    background-size: cover;
+    background-position: center;
+    border-radius: 4px;
+}
+
+/* Rating Stars */
+.rating {
+    font-size: 24px;
+    color: #ccc;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    gap: 5px;
+}
+
+.rating span {
+    transition: color 0.2s;
+}
+
+.rating span.selected {
+    color: gold;
+}
+
+.rating span:hover,
+.rating span:focus {
+    transform: scale(1.2);
+    outline: none;
+}
+
+.rating span:focus {
+    outline: 2px solid gold;
+    border-radius: 2px;
+}
+
+.submit-button {
+    background-color: var(--dark-brown);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: var(--medium-brown);
+}
+
+.submit-button:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+/* Book Display on Shelf */
+.book-entry {
+    position: absolute;
+    top: -90px;
+    left: 20px;
+    width: 80px;
+    height: 90px;
+    background-color: var(--medium-brown);
+    border: 1px solid #777;
+    padding: 5px 0;
+    text-align: center;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    z-index: 1;
+    border-radius: 2px;
+}
+
+.book-entry:hover {
+    transform: translateY(-5px);
+    box-shadow: 4px 8px 12px rgba(0, 0, 0, 0.3);
+}
+
+.book-entry:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+.book-cover-final {
+    width: 90%;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    border-radius: 2px;
+}
+
+.book-title-display {
+    margin: 2px 0;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%;
+    font-size: 0.8rem;
+    max-height: 1.2em;
+    line-height: 1.2;
+}
+
+.book-rating-display {
+    margin-top: 2px;
+    display: flex;
+    justify-content: center;
+    gap: 1px;
+}
+
+.book-star {
+    font-size: 10px;
+    color: #ccc;
+}
+
+.book-star.selected {
+    color: gold;
+}
+
+/* Book Details Modal */
+.book-details-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+@media (min-width: 600px) {
+    .book-details-container {
+        flex-direction: row;
+    }
+}
+
+.book-details-cover {
+    width: 150px;
+    height: 200px;
+    background-color: var(--medium-brown);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+    border-radius: 4px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.book-details-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.book-details-info h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+.book-details-info h4 {
+    margin: 15px 0 5px 0;
+    color: #555;
+    font-size: 1.1rem;
+}
+
+.book-details-info p {
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.details-rating {
+    margin: 10px 0;
+    display: flex;
+    gap: 2px;
+}
+
+.details-rating span {
+    font-size: 24px;
+}
+
+/* Profile Page */
+.profile-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    text-align: center;
+    background-color: var(--light-beige);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-container h1 {
+    color: var(--dark-brown);
+    margin-bottom: 40px;
+    font-size: 2rem;
+}
+
+.profile-card {
+    background-color: var(--card-beige);
+    padding: 30px;
+    border-radius: 8px;
+    text-align: left;
+    display: grid;
+    grid-template-areas: 
+        "image"
+        "detail1"
+        "detail2";
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+@media (min-width: 768px) {
+    .profile-card {
+        grid-template-areas: 
+            "image detail1"
+            "image detail2";
+        grid-template-columns: 200px 1fr;
+    }
+}
+
+.profile-image-section {
+    grid-area: image;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.profile-image-upload {
+    cursor: pointer;
+    display: block;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.profile-image-upload:hover {
+    transform: scale(1.05);
+}
+
+.profile-image-upload:focus {
+    outline: 2px solid var(--dark-brown);
+    outline-offset: 2px;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid var(--medium-brown);
+    background-color: #c0ad9f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 80px;
+    color: var(--dark-brown);
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    transition: all 0.3s;
+}
+
+.profile-detail {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--light-border);
+    position: relative;
+}
+
+.profile-detail:last-child {
+    border-bottom: none;
+}
+
+.profile-detail h2 {
+    color: var(--medium-brown);
+    font-size: 1.2rem;
+    margin-top: 0;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Profile Editable Fields */
+.editable-field {
+    display: none;
+    margin-bottom: 10px;
+}
+
+.profile-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid var(--medium-brown);
+    border-radius: 4px;
+    font-size: 1rem;
+    color: var(--very-dark-brown);
+    background-color: var(--light-beige);
+    transition: border-color 0.3s;
+}
+
+.profile-input:focus {
+    border-color: var(--nav-blue);
+    outline: none;
+}
+
+.profile-input::placeholder,
+.profile-textarea::placeholder {
+    color: #b0a295;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.profile-textarea {
+    width: 100%;
+    height: 120px;
+    padding: 12px;
+    border: 2px solid var(--medium-brown);
+    border-radius: 4px;
+    font-size: 1rem;
+    color: var(--very-dark-brown);
+    background-color: var(--light-beige);
+    resize: vertical;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    transition: border-color 0.3s;
+}
+
+.profile-textarea:focus {
+    border-color: var(--nav-blue);
+    outline: none;
+}
+
+.save-btn {
+    background-color: var(--dark-brown);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    font-size: 1rem;
+}
+
+.save-btn:hover {
+    background-color: var(--medium-brown);
+}
+
+.save-btn:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+.display-text {
+    font-size: 1rem;
+    color: var(--very-dark-brown);
+    line-height: 1.5;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    border: 2px solid transparent;
+}
+
+.display-text:hover {
+    background-color: rgba(161, 136, 127, 0.1);
+    border-color: rgba(161, 136, 127, 0.3);
+}
+
+.display-text:focus {
+    outline: 2px solid var(--medium-brown);
+    outline-offset: 2px;
+}
+
+/* Edit icon for display text */
+.display-text::before {
+    content: "✏️";
+    margin-right: 8px;
+    font-size: 0.9rem;
+    opacity: 0.6;
+    flex-shrink: 0;
+}
+
+/* Style specifically for username display */
+#usernameDisplay.display-text {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* Style specifically for bio display */
+#bioDisplay.display-text {
+    white-space: pre-line;
+}
+
+/* Success message */
+.success-message {
+    color: #2e7d32;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    position: absolute;
+    bottom: -25px;
+    right: 0;
+    background: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.success-message.show {
+    opacity: 1;
+}
+
+/* Print styles */
+@media print {
+    .navbar, .add-button, .modal, .success-message {
+        display: none !important;
+    }
+    
+    body {
+        background-color: white;
+        color: black;
+    }
+    
+    .book-entry {
+        break-inside: avoid;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .profile-input, .profile-textarea {
+        border-width: 3px;
+    }
+    
+    .book-entry {
+        border-width: 2px;
+    }
+}
+
+/* Emergency fix - add this at the very end if logo is still huge */
+.navbar > .logo-placeholder {
+    width: 100px !important;
+    height: 40px !important;
+    flex: 0 0 100px !important;
+    max-width: 100px !important;
+    min-width: 100px !important;
+}

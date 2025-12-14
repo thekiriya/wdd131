@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+<a href="#main-content" class="skip-to-content">Skip to main content</a>
+   <header class="navbar">
+    <div class="logo-placeholder"> 
+        <a href="index.html" class="logo-link">
+            <img src="logo.png" alt="Bookshelf Logo" class="logo-image">
+        </a>
+    </div>
+    <nav>
+        <a href="index.html" class="bookshelf-link">BOOKSHELF</a>
+    </nav>
+</header>
+    
+    <main class="profile-container" id="main-content" role="main" aria-label="User Profile">
+        <h1>Your Profile</h1>
+        <div class="profile-card">
+            <div class="profile-image-section">
+                <input type="file" id="profileImageInput" accept="image/*" style="display: none;">
+                <label for="profileImageInput" class="profile-image-upload" title="Click to upload image">
+                    <div id="profileImageDisplay" class="profile-image">
+                        👤
+                    </div>
+                </label>
+            </div>
+            <div class="profile-detail">
+                <h2>Username:</h2>
+                <div class="editable-field">
+                    <input type="text" id="usernameInput" class="profile-input"
+                           placeholder="Enter your username"
+                           value="BookLover123">
+                    <button class="save-btn" data-field="username">Save</button>
+                </div>
+                <div id="usernameDisplay" class="display-text">BookLover123</div>
+            </div>
+            <div class="profile-detail">
+                <h2>Bio:</h2>
+                <div class="editable-field">
+                    <textarea id="bioInput" class="profile-textarea"
+                              placeholder="Tell us about your reading preferences, favorite authors, or what you're currently reading...">
+Welcome to my digital bookcase! I enjoy fantasy novels, historical fiction, and science fiction. I am currently reading All Tomorrows by C.M. Kösemen. My favorite authors are Neil Gaiman and R.F Kuang. I am always looking for new recommendations!</textarea>
+                    <button class="save-btn" data-field="bio">Save</button>
+                </div>
+                <div id="bioDisplay" class="display-text">
+                    Welcome to my digital bookcase! I enjoy fantasy novels, historical fiction, and science fiction. I am currently reading All Tomorrows by C.M. Kösemen. My favorite authors are Neil Gaiman and R.F Kuang. I am always looking for new recommendations!
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="profile.js"></script>
+
+      <footer class="footer-profile">
+        <div class="fun-fact">
+            <h3>Fun Fact:</h3>
+            <p>The invention of the bookshelf cannot be attributed to a single inventor, 
+                as it has existed across civilizations for so long that no definitive origin can be identified.</p>
+        </div>
+    </footer>
+    
+</body>
+</html>
