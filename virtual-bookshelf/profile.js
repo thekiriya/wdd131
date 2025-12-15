@@ -4,8 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const bioDisplay = document.getElementById('bioDisplay');
     const usernameInput = document.getElementById('usernameInput');
     const bioInput = document.getElementById('bioInput');
-    const usernameSaveBtn = document.querySelector('.save-btn[data-field="username"]');
-    const bioSaveBtn = document.querySelector('.save-btn[data-field="bio"]');
+    const saveButtons = document.querySelectorAll('.save-btn');
     const profileImageInput = document.getElementById('profileImageInput');
     const profileImageDisplay = document.getElementById('profileImageDisplay');
     
@@ -22,146 +21,104 @@ document.addEventListener('DOMContentLoaded', function() {
                 profileImageDisplay.textContent = '';
                 // Save to localStorage
                 localStorage.setItem('profileImage', e.target.result);
-                showSuccessMessage('Profile image updated!', 'profile');
+                showSuccessMessage('Profile image updated!');
             };
             reader.readAsDataURL(file);
         }
     });
     
-    // Username click to edit
-    usernameDisplay.addEventListener('click', function(e) {
-        e.stopPropagation();
-        // Show username edit field, hide bio edit field
-        usernameDisplay.style.display = 'none';
-        usernameInput.closest('.editable-field').style.display = 'block';
-        
-        // Make sure bio is in display mode
-        bioDisplay.style.display = 'flex';
-        bioInput.closest('.editable-field').style.display = 'none';
-        
-        // Focus on username input
-        usernameInput.focus();
-        usernameInput.select();
+    // Make display text clickable to edit
+    usernameDisplay.addEventListener('click', function() {
+        showEditableField('username');
     });
     
-    // Bio click to edit
-    bioDisplay.addEventListener('click', function(e) {
-        e.stopPropagation();
-        // Show bio edit field, hide username edit field
-        bioDisplay.style.display = 'none';
-        bioInput.closest('.editable-field').style.display = 'block';
-        
-        // Make sure username is in display mode
-        usernameDisplay.style.display = 'flex';
-        usernameInput.closest('.editable-field').style.display = 'none';
-        
-        // Focus on bio input
-        bioInput.focus();
+    bioDisplay.addEventListener('click', function() {
+        showEditableField('bio');
     });
     
-    // Username save button
-    usernameSaveBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        saveUsername();
+    // Save button click handlers
+    saveButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const field = this.getAttribute('data-field');
+            saveField(field);
+        });
     });
     
-    // Bio save button
-    bioSaveBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        saveBio();
-    });
-    
-    // Save username with Enter key
+    // Also allow saving with Enter key for username
     usernameInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
-            e.preventDefault();
-            saveUsername();
+            saveField('username');
         }
     });
     
-    // Save bio with Ctrl+Enter
+    // Allow Ctrl+Enter to save bio
     bioInput.addEventListener('keydown', function(e) {
         if (e.ctrlKey && e.key === 'Enter') {
-            e.preventDefault();
-            saveBio();
-        }
-    });
-    
-    // Close edit mode if clicking outside
-    document.addEventListener('click', function(e) {
-        // If clicking outside of any editable area
-        if (!e.target.closest('.editable-field') && 
-            !e.target.classList.contains('display-text') &&
-            e.target !== usernameSaveBtn && 
-            e.target !== bioSaveBtn) {
-            
-            // Check if we're editing username
-            const usernameField = usernameInput.closest('.editable-field');
-            if (usernameField.style.display === 'block' || usernameField.style.display === '') {
-                // Cancel username editing
-                usernameDisplay.style.display = 'flex';
-                usernameField.style.display = 'none';
-                // Restore original value
-                usernameInput.value = usernameDisplay.textContent;
-            }
-            
-            // Check if we're editing bio
-            const bioField = bioInput.closest('.editable-field');
-            if (bioField.style.display === 'block' || bioField.style.display === '') {
-                // Cancel bio editing
-                bioDisplay.style.display = 'flex';
-                bioField.style.display = 'none';
-                // Restore original value
-                bioInput.value = bioDisplay.textContent;
-            }
+            saveField('bio');
         }
     });
     
     // Functions
-    function saveUsername() {
-        const newValue = usernameInput.value.trim();
+    function showEditableField(field) {
+        // Hide all display texts
+        document.querySelectorAll('.display-text').forEach(el => {
+            el.style.display = 'none';
+        });
         
-        if (!newValue) {
-            alert('Username cannot be empty!');
+        // Show all editable fields
+        document.querySelectorAll('.editable-field').forEach(el => {
+            el.style.display = 'block';
+        });
+        
+        // Focus on the correct field
+        if (field === 'username') {
             usernameInput.focus();
-            return;
+            usernameInput.select();
+        } else if (field === 'bio') {
+            bioInput.focus();
+        }
+    }
+    
+    function saveField(field) {
+        let newValue, displayElement, inputElement;
+        
+        if (field === 'username') {
+            newValue = usernameInput.value.trim();
+            displayElement = usernameDisplay;
+            inputElement = usernameInput;
+            
+            if (!newValue) {
+                alert('Username cannot be empty!');
+                return;
+            }
+        } else if (field === 'bio') {
+            newValue = bioInput.value.trim();
+            displayElement = bioDisplay;
+            inputElement = bioInput;
         }
         
-        // Update display
-        usernameDisplay.textContent = newValue;
-        
-        // Switch back to display mode
-        usernameDisplay.style.display = 'flex';
-        usernameInput.closest('.editable-field').style.display = 'none';
+        // Update display text
+        displayElement.textContent = newValue || getDefaultText(field);
         
         // Save to localStorage
-        localStorage.setItem('username', newValue);
+        localStorage.setItem(field, newValue);
         
-        showSuccessMessage('Username saved!', 'username');
+        // Show editable field and hide input
+        displayElement.style.display = 'block';
+        document.querySelectorAll('.editable-field').forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        showSuccessMessage(field === 'username' ? 'Username saved!' : 'Bio saved!');
     }
     
-    function saveBio() {
-        const newValue = bioInput.value.trim();
-        
-        // Update display (or use default if empty)
-        bioDisplay.textContent = newValue || getDefaultBio();
-        
-        // Switch back to display mode
-        bioDisplay.style.display = 'flex';
-        bioInput.closest('.editable-field').style.display = 'none';
-        
-        // Save to localStorage
-        localStorage.setItem('bio', newValue);
-        
-        showSuccessMessage('Bio saved!', 'bio');
-    }
-    
-    function getDefaultBio() {
-        return 'Welcome to my digital bookcase! I enjoy fantasy novels, historical fiction, and science fiction. I am currently reading All Tomorrows by C.M. Kösemen. My favorite authors are Neil Gaiman and R.F Kuang. I am always looking for new recommendations!';
-    }
-    
-    function getDefaultUsername() {
-        return 'BookLover123';
+    function getDefaultText(field) {
+        if (field === 'username') {
+            return 'BookLover123';
+        } else if (field === 'bio') {
+            return 'Welcome to my digital bookcase! I enjoy fantasy novels, historical fiction, and science fiction. I am currently reading All Tomorrows by C.M. Kösemen. My favorite authors are Neil Gaiman and R.F Kuang. I am always looking for new recommendations!';
+        }
+        return '';
     }
     
     function loadSavedData() {
@@ -170,9 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (savedUsername) {
             usernameDisplay.textContent = savedUsername;
             usernameInput.value = savedUsername;
-        } else {
-            usernameDisplay.textContent = getDefaultUsername();
-            usernameInput.value = getDefaultUsername();
         }
         
         // Load bio
@@ -180,9 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (savedBio) {
             bioDisplay.textContent = savedBio;
             bioInput.value = savedBio;
-        } else {
-            bioDisplay.textContent = getDefaultBio();
-            bioInput.value = getDefaultBio();
         }
         
         // Load profile image
@@ -193,42 +144,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    function showSuccessMessage(message, field) {
-        // Remove any existing success messages
-        document.querySelectorAll('.success-message').forEach(el => el.remove());
+    function showSuccessMessage(message) {
+        // Create or get success message element
+        let successMsg = document.querySelector('.success-message');
+        if (!successMsg) {
+            successMsg = document.createElement('div');
+            successMsg.className = 'success-message';
+            document.querySelector('.profile-card').appendChild(successMsg);
+        }
         
-        // Create new success message
-        const successMsg = document.createElement('div');
-        successMsg.className = 'success-message';
         successMsg.textContent = message;
+        successMsg.classList.add('show');
         
-        // Find the parent profile-detail container for this field
-        let container;
-        if (field === 'username') {
-            container = usernameDisplay.closest('.profile-detail');
-        } else if (field === 'bio') {
-            container = bioDisplay.closest('.profile-detail');
-        } else if (field === 'profile') {
-            container = document.querySelector('.profile-image-section');
-        }
-        
-        if (container) {
-            container.appendChild(successMsg);
-            
-            // Show the message
-            setTimeout(() => {
-                successMsg.classList.add('show');
-            }, 10);
-            
-            // Hide after 3 seconds
-            setTimeout(() => {
-                successMsg.classList.remove('show');
-                setTimeout(() => {
-                    if (successMsg.parentNode) {
-                        successMsg.parentNode.removeChild(successMsg);
-                    }
-                }, 300);
-            }, 3000);
-        }
+        // Hide after 3 seconds
+        setTimeout(() => {
+            successMsg.classList.remove('show');
+        }, 3000);
     }
 });

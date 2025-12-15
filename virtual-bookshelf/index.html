@@ -1,91 +1,96 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Digital Bookshelf</title>
-    <link rel="stylesheet" href="styles.css">
-
-
-    
-
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>My Digital Bookshelf</title>
+   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  
-<a href="#main-content" class="skip-to-content">Skip to main content</a>
-    <header class="navbar">
-    <div class="logo-placeholder"> 
-        <a href="index.html" class="logo-link">
-            <img src="logo.png" alt="Bookshelf Logo" class="logo-image">
-        </a>
-    </div>
-    <nav>
-        </nav>
-</header>
-    <main class="bookshelf-container" id="main-content" role="main" aria-label="Bookshelf">
-        <div class="shelf">
-            <button class="add-button" id="addFirstBook">+</button>
+   <header class="navbar">
+       <div class="logo">
+            <a href="index.html" class="logo-link">
+                <img src="logo.png" alt="Bookshelf Logo" class="logo-image">
+            </a>
         </div>
-        <div class="shelf"></div>
-        <div class="shelf"></div>
-        <div class="shelf"></div>
-    </main>
-    
-    <!-- Modal for adding new books -->
-    <div id="bookModal" class="modal">
-        <div class="modal-content">
-          <button type="button" class="close-button" aria-label="Close add book modal">&times;</button>
-            <h2>Add a New Book</h2>
-            <form id="bookForm">
-                <div class="form-group">
-                    <label for="bookTitle">Book Title:</label>
-                    <input type="text" id="bookTitle" required>
-                </div>
-                <div class="form-group">
-                    <label for="bookCoverUpload">Book Cover Image:</label>
-                    <input type="file" id="bookCoverUpload" accept="image/*" required>
-                    <div id="coverPreview" class="cover-preview"></div>
-                </div>
-                <div class="form-group">
-                    <label for="bookRating">Rating (1-5 Stars):</label>
-                    <div id="bookRating" class="rating">
-                        <span data-value="1">★</span>
-                        <span data-value="2">★</span>
-                        <span data-value="3">★</span>
-                        <span data-value="4">★</span>
-                        <span data-value="5">★</span>
-                        <input type="hidden" id="ratingValue" name="ratingValue" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="bookDescription">Description:</label>
-                    <textarea id="bookDescription" rows="4" required></textarea>
-                </div>
-                <button type="submit" class="submit-button">Save Book</button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Modal for viewing book details -->
-    <div id="bookDetailsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-details-button">&times;</span>
-            <h2>Book Details</h2>
-            <div class="book-details-container">
-                <div id="detailsBookCover" class="book-details-cover"></div>
-                <div class="book-details-info">
-                    <h3 id="detailsTitle"></h3>
-                    <div class="details-rating" id="detailsRating"></div>
-                    <h4>Description:</h4>
-                    <p id="detailsDescription"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script src="main.js"></script>
+       <nav>
+           <a href="profile.html" class="profile-link">PROFILE</a>
+       </nav>
+   </header>
 
-      <footer class="footer-profile">
+
+   <main class="bookshelf-container">
+       <div class="shelf">
+           <button class="add-button" id="addFirstBook">+</button>
+       </div>
+       <div class="shelf"></div>
+       <div class="shelf"></div>
+       <div class="shelf"></div>
+   </main>
+
+
+   <!-- Modal for adding new books -->
+   <div id="bookModal" class="modal">
+       <div class="modal-content">
+           <span class="close-button">&times;</span>
+           <h2>Add a New Book</h2>
+           <form id="bookForm">
+               <div class="form-group">
+                   <label for="bookTitle">Book Title:</label>
+                   <input type="text" id="bookTitle" required>
+               </div>
+              
+               <div class="form-group">
+                   <label for="bookCoverUpload">Book Cover Image:</label>
+                   <input type="file" id="bookCoverUpload" accept="image/*" required>
+                   <div id="coverPreview" class="cover-preview"></div>
+               </div>
+              
+               <div class="form-group">
+                   <label for="bookRating">Rating (1-5 Stars):</label>
+                   <div id="bookRating" class="rating">
+                       <span data-value="1">★</span>
+                       <span data-value="2">★</span>
+                       <span data-value="3">★</span>
+                       <span data-value="4">★</span>
+                       <span data-value="5">★</span>
+                       <input type="hidden" id="ratingValue" name="ratingValue" required>
+                   </div>
+               </div>
+              
+               <div class="form-group">
+                   <label for="bookDescription">Description:</label>
+                   <textarea id="bookDescription" rows="4" required></textarea>
+               </div>
+              
+               <button type="submit" class="submit-button">Save Book</button>
+           </form>
+       </div>
+   </div>
+
+
+   <!-- Modal for viewing book details -->
+   <div id="bookDetailsModal" class="modal">
+       <div class="modal-content">
+           <span class="close-details-button">&times;</span>
+           <h2>Book Details</h2>
+           <div class="book-details-container">
+               <div id="detailsBookCover" class="book-details-cover"></div>
+               <div class="book-details-info">
+                   <h3 id="detailsTitle"></h3>
+                   <div class="details-rating" id="detailsRating"></div>
+                   <h4>Description:</h4>
+                   <p id="detailsDescription"></p>
+               </div>
+           </div>
+       </div>
+   </div>
+
+
+   <script src="main.js"></script>
+
+    <footer class="footer-profile">
         <div class="fun-fact">
             <h3>About</h3>
             <p>This site is a personal digital bookshelf built for readers who like to keep track of what they read. 
@@ -96,6 +101,5 @@
                    If you enjoy seeing patterns in what you read or just want a place where your books do not disappear into the void, you’re in the right place.</p>
         </div>
     </footer>
-    
 </body>
 </html>

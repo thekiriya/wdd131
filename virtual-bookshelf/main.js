@@ -1,442 +1,298 @@
-// Optimized main.js
 document.addEventListener('DOMContentLoaded', function() {
-    'use strict';
-    
-    // Cache DOM elements
-    const elements = {
-        modal: document.getElementById('bookModal'),
-        detailsModal: document.getElementById('bookDetailsModal'),
-        addButtons: document.querySelectorAll('.add-button'),
-        closeButton: document.querySelector('.close-button'),
-        closeDetailsButton: document.querySelector('.close-details-button'),
-        bookForm: document.getElementById('bookForm'),
-        bookCoverUpload: document.getElementById('bookCoverUpload'),
-        coverPreview: document.getElementById('coverPreview'),
-        ratingContainer: document.getElementById('bookRating'),
-        ratingInput: document.getElementById('ratingValue'),
-        stars: document.querySelectorAll('#bookRating span'),
-        bookTitle: document.getElementById('bookTitle'),
-        bookDescription: document.getElementById('bookDescription')
-    };
-    
-    // State variables
+    // Variable to hold the uploaded image data
     let uploadedBookCoverURL = '';
-    let currentShelfIndex = 0;
-    let bookCounter = 0;
+    let currentShelfIndex = 0; // Track which shelf we're adding to
+
+    // -- 1. SETUP MODAL ELEMENTS --
+    const modal = document.getElementById('bookModal');
+    const addButton = document.querySelector('.add-button');
+    const closeButton = document.querySelector('.close-button');
+    const bookForm = document.getElementById('bookForm');
+
+    // -- 2. STAR RATING ELEMENTS --
+    const ratingContainer = document.getElementById('bookRating');
+    const ratingInput = document.getElementById('ratingValue');
+    const stars = ratingContainer ? ratingContainer.querySelectorAll('span') : [];
     let currentRating = 0;
-    
-    // Initialize
-    init();
-    
-    function init() {
-        // Add event listeners
-        setupEventListeners();
-        
-        // Set ARIA labels
-        setAriaLabels();
-    }
-    
-    function setupEventListeners() {
-        // Book cover upload preview
-        elements.bookCoverUpload.addEventListener('change', handleBookCoverUpload);
-        
-        // Star rating
-        if (elements.stars.length) {
-            elements.stars.forEach(star => {
-                star.addEventListener('click', handleStarClick);
-                star.addEventListener('keydown', handleStarKeydown);
-                star.addEventListener('mouseover', handleStarMouseover);
-                star.setAttribute('tabindex', '0');
-                star.setAttribute('role', 'button');
-            });
-            
-            elements.ratingContainer.addEventListener('mouseleave', handleRatingMouseleave);
-        }
-        
-        // Open modal
-        elements.addButtons.forEach((button, index) => {
-            button.addEventListener('click', () => openModal(index));
-            button.setAttribute('aria-label', 'Add new book to shelf ' + (index + 1));
+
+    // -- 3. MODAL OPEN/CLOSE LOGIC --
+    if (addButton) {
+        addButton.addEventListener('click', function() {
+            if (modal) {
+                modal.style.display = 'block';
+            }
         });
-        
-        // Close modals
-        elements.closeButton.addEventListener('click', closeModal);
-        elements.closeDetailsButton.addEventListener('click', closeDetailsModal);
-        
-        // Close modals when clicking outside
-        document.addEventListener('click', handleOutsideClick);
-        
-        // Close modals with Escape key
-        document.addEventListener('keydown', handleEscapeKey);
-        
-        // Form submission
-        elements.bookForm.addEventListener('submit', handleFormSubmit);
-        
-        // Form validation
-        elements.bookTitle.addEventListener('input', validateTitle);
-        elements.ratingInput.addEventListener('change', validateRating);
     }
-    
-    function setAriaLabels() {
-        // Set ARIA labels for accessibility
-        elements.modal.setAttribute('aria-hidden', 'true');
-        elements.modal.setAttribute('aria-modal', 'true');
-        elements.modal.setAttribute('role', 'dialog');
-        
-        elements.detailsModal.setAttribute('aria-hidden', 'true');
-        elements.detailsModal.setAttribute('aria-modal', 'true');
-        elements.detailsModal.setAttribute('role', 'dialog');
-        
-        // Set labels for form elements
-        elements.bookTitle.setAttribute('aria-label', 'Book title');
-        elements.bookCoverUpload.setAttribute('aria-label', 'Book cover image upload');
-        elements.bookDescription.setAttribute('aria-label', 'Book description');
+
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            if (modal) {
+                modal.style.display = 'none';
+                resetForm();
+            }
+        });
     }
-    
-    function handleBookCoverUpload(event) {
-        const file = event.target.files[0];
-        if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedBookCoverURL = e.target.result;
-                elements.coverPreview.style.backgroundImage = `url('${uploadedBookCoverURL}')`;
-                elements.coverPreview.textContent = '';
-                elements.coverPreview.setAttribute('aria-label', 'Book cover preview');
-            };
-            reader.readAsDataURL(file);
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+            resetForm();
         }
-    }
-    
-    function handleStarClick() {
-        currentRating = parseInt(this.getAttribute('data-value'));
-        elements.ratingInput.value = currentRating;
-        updateStarRating(currentRating);
-        this.focus();
-    }
-    
-    function handleStarKeydown(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleStarClick.call(this);
-        }
-    }
-    
-    function handleStarMouseover() {
-        const hoverRating = parseInt(this.getAttribute('data-value'));
-        updateStarRating(hoverRating);
-    }
-    
-    function handleRatingMouseleave() {
-        updateStarRating(currentRating);
-    }
-    
+    });
+
+    // -- 4. STAR RATING LOGIC --
     function updateStarRating(rating) {
-        elements.stars.forEach(star => {
+        stars.forEach(star => {
             const starValue = parseInt(star.getAttribute('data-value'));
-            const isSelected = starValue <= rating;
-            star.classList.toggle('selected', isSelected);
-            star.setAttribute('aria-pressed', isSelected);
+            if (starValue <= rating) {
+                star.classList.add('selected');
+            } else {
+                star.classList.remove('selected');
+            }
         });
     }
-    
-    function openModal(shelfIndex) {
-        currentShelfIndex = shelfIndex;
-        elements.modal.style.display = 'block';
-        elements.modal.setAttribute('aria-hidden', 'false');
-        elements.bookTitle.focus();
-        
-        // Trap focus inside modal
-        trapFocus(elements.modal);
+
+    if (stars.length > 0) {
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                currentRating = parseInt(this.getAttribute('data-value'));
+                ratingInput.value = currentRating;
+                updateStarRating(currentRating);
+            });
+
+            star.addEventListener('mouseover', function() {
+                updateStarRating(parseInt(this.getAttribute('data-value')));
+            });
+        });
+
+        ratingContainer.addEventListener('mouseleave', function() {
+            updateStarRating(currentRating);
+        });
     }
-    
-    function closeModal() {
-        elements.modal.style.display = 'none';
-        elements.modal.setAttribute('aria-hidden', 'true');
-        resetForm();
-    }
-    
-    function closeDetailsModal() {
-        elements.detailsModal.style.display = 'none';
-        elements.detailsModal.setAttribute('aria-hidden', 'true');
-    }
-    
-    function handleOutsideClick(event) {
-        if (event.target === elements.modal) {
-            closeModal();
-        }
-        if (event.target === elements.detailsModal) {
-            closeDetailsModal();
-        }
-    }
-    
-    function handleEscapeKey(event) {
-        if (event.key === 'Escape') {
-            if (elements.modal.style.display === 'block') {
-                closeModal();
+
+    // -- 5. INITIAL BOOK COVER UPLOAD LOGIC --
+    const initialBookCoverInput = document.getElementById('bookCoverInput1');
+    const initialBookCoverDisplay = document.getElementById('bookCoverDisplay1');
+
+    if (initialBookCoverInput && initialBookCoverDisplay) {
+        initialBookCoverInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Save the uploaded image
+                    uploadedBookCoverURL = e.target.result;
+                    initialBookCoverDisplay.style.backgroundImage = `url('${uploadedBookCoverURL}')`;
+                    initialBookCoverDisplay.textContent = '';
+                    initialBookCoverDisplay.style.backgroundSize = 'cover';
+                    initialBookCoverDisplay.style.backgroundPosition = 'center';
+                };
+                reader.readAsDataURL(file);
             }
-            if (elements.detailsModal.style.display === 'block') {
-                closeDetailsModal();
+        });
+    }
+
+    // -- 6. FORM SUBMIT HANDLER --
+    if (bookForm) {
+        bookForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get form values
+            const title = document.getElementById('bookTitle').value.trim();
+            const description = document.getElementById('bookDescription').value.trim();
+            const rating = ratingInput.value;
+
+            if (!title) {
+                alert('Please enter a book title');
+                return;
             }
-        }
+
+            if (!rating) {
+                alert('Please select a rating');
+                return;
+            }
+
+            // Find the current shelf
+            const shelves = document.querySelectorAll('.shelf');
+            const currentShelf = shelves[currentShelfIndex];
+
+            // Create and add the book
+            const newBook = createBookElement(title, rating, description, uploadedBookCoverURL);
+            currentShelf.appendChild(newBook);
+
+            // Make the book clickable to show details
+            newBook.addEventListener('click', function() {
+                showBookDetails(title, description, rating, uploadedBookCoverURL);
+            });
+
+            // Move to next position for next book
+            updateBookPosition(currentShelf);
+
+            // Reset everything
+            modal.style.display = 'none';
+            resetForm();
+        });
     }
-    
-    function handleFormSubmit(event) {
-        event.preventDefault();
-        
-        if (!validateForm()) {
-            return;
-        }
-        
-        // Get form values
-        const title = elements.bookTitle.value.trim();
-        const description = elements.bookDescription.value.trim();
-        const rating = elements.ratingInput.value;
-        
-        // Find the current shelf
-        const shelves = document.querySelectorAll('.shelf');
-        const currentShelf = shelves[currentShelfIndex];
-        
-        // Create and add the book
-        const newBook = createBookElement(title, rating, description, uploadedBookCoverURL);
-        currentShelf.appendChild(newBook);
-        
-        // Position the book
-        positionBookOnShelf(newBook, currentShelf);
-        
-        // Update add button position
-        updateAddButtonPosition(currentShelf);
-        
-        // Announce to screen readers
-        announceToScreenReader(`Added book "${title}" to shelf`);
-        
-        // Reset and close
-        closeModal();
-    }
-    
-    function validateForm() {
-        let isValid = true;
-        
-        if (!elements.bookTitle.value.trim()) {
-            showError(elements.bookTitle, 'Please enter a book title');
-            isValid = false;
-        }
-        
-        if (!uploadedBookCoverURL) {
-            showError(elements.bookCoverUpload, 'Please upload a book cover image');
-            isValid = false;
-        }
-        
-        if (!elements.ratingInput.value) {
-            showError(elements.ratingContainer, 'Please select a rating');
-            isValid = false;
-        }
-        
-        return isValid;
-    }
-    
-    function validateTitle() {
-        if (this.value.trim()) {
-            clearError(this);
-        }
-    }
-    
-    function validateRating() {
-        if (this.value) {
-            clearError(elements.ratingContainer);
-        }
-    }
-    
-    function showError(element, message) {
-        element.classList.add('error');
-        let errorElement = element.nextElementSibling;
-        if (!errorElement || !errorElement.classList.contains('error-message')) {
-            errorElement = document.createElement('div');
-            errorElement.className = 'error-message';
-            errorElement.style.color = 'red';
-            errorElement.style.fontSize = '0.9rem';
-            errorElement.style.marginTop = '5px';
-            element.parentNode.insertBefore(errorElement, element.nextSibling);
-        }
-        errorElement.textContent = message;
-        errorElement.setAttribute('role', 'alert');
-    }
-    
-    function clearError(element) {
-        element.classList.remove('error');
-        const errorElement = element.nextElementSibling;
-        if (errorElement && errorElement.classList.contains('error-message')) {
-            errorElement.remove();
-        }
-    }
-    
+
+    // -- 7. HELPER FUNCTIONS --
     function resetForm() {
-        elements.bookForm.reset();
+        bookForm.reset();
         currentRating = 0;
-        elements.ratingInput.value = '';
+        ratingInput.value = '';
         uploadedBookCoverURL = '';
         updateStarRating(0);
-        elements.coverPreview.style.backgroundImage = '';
-        elements.coverPreview.textContent = 'Preview';
-        elements.coverPreview.style.backgroundColor = '#eee';
-        elements.coverPreview.removeAttribute('aria-label');
         
-        // Clear any errors
-        document.querySelectorAll('.error-message').forEach(el => el.remove());
-        document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+        // Reset the book cover display
+        if (initialBookCoverDisplay) {
+            initialBookCoverDisplay.style.backgroundImage = '';
+            initialBookCoverDisplay.textContent = '📚';
+            initialBookCoverDisplay.style.backgroundSize = '';
+            initialBookCoverDisplay.style.backgroundPosition = '';
+        }
+        
+        // Reset file input
+        if (initialBookCoverInput) {
+            initialBookCoverInput.value = '';
+        }
     }
-    
+
     function createBookElement(title, rating, description, coverImageURL) {
-        bookCounter++;
-        
+        // Create the book container
         const bookDiv = document.createElement('div');
         bookDiv.className = 'book-entry';
-        bookDiv.id = `book-${bookCounter}`;
         bookDiv.setAttribute('data-title', title);
         bookDiv.setAttribute('data-description', description);
         bookDiv.setAttribute('data-rating', rating);
-        bookDiv.setAttribute('data-cover', coverImageURL);
-        bookDiv.setAttribute('tabindex', '0');
-        bookDiv.setAttribute('role', 'button');
-        bookDiv.setAttribute('aria-label', `${title}, rated ${rating} out of 5 stars`);
-        
+
         // Create cover
         const coverDiv = document.createElement('div');
         coverDiv.className = 'book-cover-final';
-        coverDiv.style.backgroundImage = `url('${coverImageURL}')`;
-        coverDiv.setAttribute('aria-hidden', 'true');
         
+        if (coverImageURL) {
+            coverDiv.style.backgroundImage = `url('${coverImageURL}')`;
+            coverDiv.style.backgroundSize = 'cover';
+            coverDiv.style.backgroundPosition = 'center';
+        } else {
+            // Use first 2 letters of title
+            const coverText = title.substring(0, 2).toUpperCase();
+            coverDiv.textContent = coverText;
+            coverDiv.style.backgroundColor = '#6d4c41';
+            coverDiv.style.color = 'white';
+            coverDiv.style.display = 'flex';
+            coverDiv.style.justifyContent = 'center';
+            coverDiv.style.alignItems = 'center';
+            coverDiv.style.fontSize = '1.5em';
+            coverDiv.style.fontWeight = 'bold';
+        }
+
         // Create title
         const titlePara = document.createElement('p');
         titlePara.className = 'book-title-display';
         titlePara.textContent = title;
-        
+
         // Create rating
         const ratingDiv = document.createElement('div');
         ratingDiv.className = 'book-rating-display';
-        ratingDiv.setAttribute('aria-label', `${rating} out of 5 stars`);
         
         for (let i = 1; i <= 5; i++) {
             const star = document.createElement('span');
             star.className = i <= rating ? 'book-star selected' : 'book-star';
             star.textContent = '★';
-            star.setAttribute('aria-hidden', 'true');
             ratingDiv.appendChild(star);
         }
-        
-        // Assemble book
+
+        // Assemble the book
         bookDiv.appendChild(coverDiv);
         bookDiv.appendChild(titlePara);
         bookDiv.appendChild(ratingDiv);
-        
-        // Add event listeners
-        bookDiv.addEventListener('click', () => showBookDetails(title, description, rating, coverImageURL));
-        bookDiv.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                showBookDetails(title, description, rating, coverImageURL);
-            }
-        });
-        
+
         return bookDiv;
     }
-    
-    function positionBookOnShelf(book, shelf) {
-        const books = shelf.querySelectorAll('.book-entry');
-        const position = books.length - 1;
-        const bookWidth = 90;
-        const leftPosition = 20 + (position * bookWidth);
-        
-        book.style.left = `${leftPosition}px`;
-    }
-    
-    function updateAddButtonPosition(shelf) {
+
+    function updateBookPosition(shelf) {
+        // Update position for the + button
         const books = shelf.querySelectorAll('.book-entry');
         const addBtn = shelf.querySelector('.add-button');
         
         if (books.length > 0 && addBtn) {
             const lastBook = books[books.length - 1];
             const lastBookRect = lastBook.getBoundingClientRect();
-            const shelfRect = shelf.getBoundingClientRect();
-            
-            const relativeLeft = lastBookRect.left - shelfRect.left + lastBookRect.width + 10;
-            addBtn.style.left = `${relativeLeft}px`;
+            addBtn.style.left = (lastBookRect.left + lastBookRect.width + 20) + 'px';
         }
     }
-    
+
     function showBookDetails(title, description, rating, coverImageURL) {
-        // Populate details
+        // Create modal if it doesn't exist
+        let detailsModal = document.getElementById('bookDetailsModal');
+        
+        if (!detailsModal) {
+            detailsModal = document.createElement('div');
+            detailsModal.id = 'bookDetailsModal';
+            detailsModal.className = 'modal';
+            detailsModal.innerHTML = `
+                <div class="modal-content">
+                    <span class="close-button" id="closeDetails">&times;</span>
+                    <h2>Book Details</h2>
+                    <div class="book-details-container">
+                        <div id="detailsBookCover" class="book-details-cover"></div>
+                        <div class="book-details-info">
+                            <h3 id="detailsTitle"></h3>
+                            <div class="details-rating" id="detailsRating"></div>
+                            <h4>Description:</h4>
+                            <p id="detailsDescription"></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(detailsModal);
+
+            // Add close functionality
+            document.getElementById('closeDetails').addEventListener('click', function() {
+                detailsModal.style.display = 'none';
+            });
+
+            detailsModal.addEventListener('click', function(event) {
+                if (event.target === detailsModal) {
+                    detailsModal.style.display = 'none';
+                }
+            });
+        }
+
+        // Populate modal
         document.getElementById('detailsTitle').textContent = title;
         document.getElementById('detailsDescription').textContent = description || 'No description provided.';
-        
+
         const detailsCover = document.getElementById('detailsBookCover');
-        detailsCover.style.backgroundImage = `url('${coverImageURL}')`;
-        detailsCover.style.backgroundSize = 'cover';
-        detailsCover.style.backgroundPosition = 'center';
-        detailsCover.textContent = '';
-        detailsCover.setAttribute('aria-label', `Cover image for ${title}`);
-        
+        if (coverImageURL) {
+            detailsCover.style.backgroundImage = `url('${coverImageURL}')`;
+            detailsCover.textContent = '';
+            detailsCover.style.backgroundSize = 'cover';
+            detailsCover.style.backgroundPosition = 'center';
+        } else {
+            detailsCover.style.backgroundImage = '';
+            detailsCover.textContent = title.substring(0, 2).toUpperCase();
+            detailsCover.style.backgroundColor = '#6d4c41';
+            detailsCover.style.color = 'white';
+            detailsCover.style.display = 'flex';
+            detailsCover.style.justifyContent = 'center';
+            detailsCover.style.alignItems = 'center';
+            detailsCover.style.fontSize = '2em';
+        }
+
         // Create rating stars
         const detailsRating = document.getElementById('detailsRating');
         detailsRating.innerHTML = '';
-        detailsRating.setAttribute('aria-label', `${rating} out of 5 stars`);
-        
         for (let i = 1; i <= 5; i++) {
             const star = document.createElement('span');
             star.textContent = '★';
             star.style.color = i <= rating ? 'gold' : '#ccc';
-            star.style.marginRight = '5px';
-            star.setAttribute('aria-hidden', 'true');
+            star.style.fontSize = '24px';
+            star.style.marginRight = '2px';
             detailsRating.appendChild(star);
         }
-        
+
         // Show modal
-        elements.detailsModal.style.display = 'block';
-        elements.detailsModal.setAttribute('aria-hidden', 'false');
-        elements.detailsModal.querySelector('.close-details-button').focus();
-        
-        // Trap focus
-        trapFocus(elements.detailsModal);
+        detailsModal.style.display = 'block';
     }
-    
-    function trapFocus(modal) {
-        const focusableElements = modal.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        const firstFocusable = focusableElements[0];
-        const lastFocusable = focusableElements[focusableElements.length - 1];
-        
-        modal.addEventListener('keydown', function trapHandler(e) {
-            if (e.key !== 'Tab') return;
-            
-            if (e.shiftKey) {
-                if (document.activeElement === firstFocusable) {
-                    lastFocusable.focus();
-                    e.preventDefault();
-                }
-            } else {
-                if (document.activeElement === lastFocusable) {
-                    firstFocusable.focus();
-                    e.preventDefault();
-                }
-            }
-        });
-    }
-    
-    function announceToScreenReader(message) {
-        const announcement = document.createElement('div');
-        announcement.setAttribute('aria-live', 'polite');
-        announcement.setAttribute('aria-atomic', 'true');
-        announcement.className = 'sr-only';
-        announcement.textContent = message;
-        document.body.appendChild(announcement);
-        
-        setTimeout(() => {
-            announcement.remove();
-        }, 1000);
-    }
-    
-    // Utility function for screen reader only text
-    const style = document.createElement('style');
-    style.textContent = '.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }';
-    document.head.appendChild(style);
 });
